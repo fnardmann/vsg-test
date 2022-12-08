@@ -1,4 +1,3 @@
-# CMake 3.8+ has build-in cuda support
 cmake_minimum_required(VERSION 3.8 FATAL_ERROR)
 
 project(vsg-test LANGUAGES CXX)
