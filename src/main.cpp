@@ -1,38 +1,23 @@
 #include <vsg/all.h>
 
 #include <iostream>
-#include <vector>
-
-struct Point3D 
-{
-    Point3D(double x_, double y_, double z_)
-        : x(x_), y(y_), z(z_) {};
-
-    double x;
-    double y;
-    double z;
-};
 
 int main(int argc, char** argv)
 {
-    std::vector<Point3D> points {
-        Point3D(0.0, 0.0, 0.0),
-        Point3D(1.0, 0.0, 0.0),
-        Point3D(2.0, 0.0, 0.0),
-        Point3D(3.0, 0.0, 0.0),
-        Point3D(4.0, 0.0, 1.0)
-    };
+    // set up defaults and read command line arguments to override them
+    vsg::CommandLine arguments(&argc, argv);
 
-    vsg::Geometry* geometry = new vsg::Geometry;
+    std::string filename = "../teapot.vsgt";
 
-    vsg::ref_ptr<vsg::vec3Array> vertices(new vsg::vec3Array(points.size()));
+    auto options = vsg::Options::create();
 
-    for (size_t i = 0; i < points.size(); i++)
+    // load the scene graph
+    vsg::ref_ptr<vsg::Node> vsg_scene = vsg::read_cast<vsg::Node>(filename, options);
+    if (!vsg_scene)
     {
-        vertices->at(i) = vsg::vec3(points[i].x, points[i].y, points[i].z);
+        std::cout << "Could not load vsg scene" << std::endl;
+        return 0;
     }
-
-    geometry->assignArrays(vsg::DataList{ vertices });
 
     // create the viewer and assign window(s) to it
     auto windowTraits = vsg::WindowTraits::create();
@@ -47,12 +32,9 @@ int main(int argc, char** argv)
 
     viewer->addWindow(window);
 
-    auto scene = vsg::Node::create();
-    scene->setObject("hello", geometry);
-
     // compute the bounds of the scene graph to help position camera
     vsg::ComputeBounds computeBounds;
-    scene->accept(computeBounds);
+    vsg_scene->accept(computeBounds);
     vsg::dvec3 centre = (computeBounds.bounds.min + computeBounds.bounds.max) * 0.5;
     double radius = vsg::length(computeBounds.bounds.max - computeBounds.bounds.min) * 0.6;
     double nearFarRatio = 0.001;
@@ -61,7 +43,7 @@ int main(int argc, char** argv)
     auto lookAt = vsg::LookAt::create(centre + vsg::dvec3(0.0, -radius * 3.5, 0.0), centre, vsg::dvec3(0.0, 0.0, 1.0));
 
     vsg::ref_ptr<vsg::ProjectionMatrix> perspective;
-    vsg::ref_ptr<vsg::EllipsoidModel> ellipsoidModel(scene->getObject<vsg::EllipsoidModel>("EllipsoidModel"));
+    vsg::ref_ptr<vsg::EllipsoidModel> ellipsoidModel(vsg_scene->getObject<vsg::EllipsoidModel>("EllipsoidModel"));
     if (ellipsoidModel)
     {
         double horizonMountainHeight = 0.0;
@@ -81,7 +63,7 @@ int main(int argc, char** argv)
     viewer->addEventHandler(vsg::Trackball::create(camera, ellipsoidModel));
 
     // add the CommandGraph to render the scene
-    auto commandGraph = vsg::createCommandGraphForView(window, camera, scene);
+    auto commandGraph = vsg::createCommandGraphForView(window, camera, vsg_scene);
     viewer->assignRecordAndSubmitTaskAndPresentation({commandGraph});
 
     // compile all Vulkan objects and transfer image, vertex and primitive data to GPU
