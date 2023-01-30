@@ -1,6 +1,6 @@
-# vsg-test
-
-# Installation (Linux)
+# Hello World project for VulkanSceneGraph
+---
+### Installation (Linux)
 ```
 https://packages.lunarg.com/#
 
@@ -10,7 +10,8 @@ sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-1.3.231-focal.list https://p
 sudo apt update
 sudo apt install vulkan-sdk
 ```
-
+---
+### Run
 ```shell
 mkdir build
 cd build
