@@ -3,20 +3,22 @@
 #include "Scene.h"
 
 #include <iostream>
+#include <exception>
+
+vsg::ref_ptr<vsg::Node> load_file(const std::string& path)
+{
+    // load the scene graph
+    auto vsg_scene = vsg::read_cast<vsg::Node>(path, vsg::Options::create());
+    if (!vsg_scene)
+    {
+        throw std::runtime_error("Could not load vsg scene: " + path);
+    }
+    return vsg_scene;
+}
 
 int main()
 {
-    std::string filename = "../teapot.vsgt";
-
-    // load the scene graph
-    vsg::ref_ptr<vsg::Node> vsg_scene = vsg::read_cast<vsg::Node>(filename, vsg::Options::create());
-    if (!vsg_scene)
-    {
-        std::cout << "Could not load vsg scene" << std::endl;
-        return 0;
-    }
-
-    auto zz = vsg_scene.get();
+    auto vsg_scene = load_file("../teapot.vsgt");
 
     // create the viewer and assign window(s) to it
     auto windowTraits = vsg::WindowTraits::create();
