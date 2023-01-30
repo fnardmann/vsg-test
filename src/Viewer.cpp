@@ -1,6 +1,6 @@
 #include "Viewer.h"
 
-Viewer::Viewer(vsg::ref_ptr<vsg::Node> scenegraph)
+Viewer::Viewer(NodePtr scenegraph)
     : viewer(vsg::Viewer::create())
 {
     auto window = create_window();
@@ -29,8 +29,7 @@ vsg::ref_ptr<vsg::Window> Viewer::create_window()
     return window;
 }
 
-vsg::ref_ptr<vsg::Camera> Viewer::create_camera(
-    vsg::ref_ptr<vsg::Node> scenegraph, vsg::ref_ptr<vsg::Window> window)
+vsg::ref_ptr<vsg::Camera> Viewer::create_camera(NodePtr scenegraph, WindowPtr window)
 {
     // compute the bounds of the scene graph to help position camera
     vsg::ComputeBounds computeBounds;
@@ -57,7 +56,7 @@ vsg::ref_ptr<vsg::Camera> Viewer::create_camera(
     return vsg::Camera::create(perspective, lookAt, vsg::ViewportState::create(window->extent2D()));
 }
 
-void Viewer::add_event_handlers(vsg::ref_ptr<vsg::Node> scenegraph, vsg::ref_ptr<vsg::Camera> camera)
+void Viewer::add_event_handlers(NodePtr scenegraph, CamPtr camera)
 {
     // add close handler to respond the close window button and pressing escape
     viewer->addEventHandler(vsg::CloseHandler::create(viewer));
