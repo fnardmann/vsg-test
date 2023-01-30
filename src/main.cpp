@@ -1,5 +1,7 @@
 #include <vsg/all.h>
 
+#include "Scene.h"
+
 #include <iostream>
 
 int main()
@@ -67,17 +69,7 @@ int main()
     viewer->compile();
 
     // rendering main loop
-    while (viewer->advanceToNextFrame())
-    {
-        // pass any events into EventHandlers assigned to the Viewer
-        viewer->handleEvents();
-
-        viewer->update();
-
-        viewer->recordAndSubmit();
-
-        viewer->present();
-    }
+    Scene::run(viewer);
 
     // clean up done automatically thanks to ref_ptr<>
     return 0;
