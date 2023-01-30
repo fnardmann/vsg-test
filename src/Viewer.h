@@ -23,6 +23,8 @@ private:
 
     void add_event_handlers(NodePtr scenegraph, CamPtr camera);
 
+    void add_command_graph(NodePtr scenegraph, CamPtr camera, WindowPtr window);
+
     vsg::ref_ptr<vsg::Viewer> viewer;
 };
 

@@ -8,10 +8,7 @@ Viewer::Viewer(NodePtr scenegraph)
     viewer->addWindow(window);
 
     add_event_handlers(scenegraph, camera);
-
-    // add the CommandGraph to render the scene
-    auto commandGraph = vsg::createCommandGraphForView(window, camera, scenegraph);
-    viewer->assignRecordAndSubmitTaskAndPresentation({commandGraph});
+    add_command_graph(scenegraph, camera, window);
 
     // compile all Vulkan objects and transfer image, vertex and primitive data to GPU
     viewer->compile();
@@ -64,4 +61,10 @@ void Viewer::add_event_handlers(NodePtr scenegraph, CamPtr camera)
     // add trackball to control the Camera
     vsg::ref_ptr<vsg::EllipsoidModel> ellipsoidModel(scenegraph->getObject<vsg::EllipsoidModel>("EllipsoidModel"));
     viewer->addEventHandler(vsg::Trackball::create(camera, ellipsoidModel));
+}
+
+void Viewer::add_command_graph(NodePtr scenegraph, CamPtr camera, WindowPtr window)
+{
+    auto commandGraph = vsg::createCommandGraphForView(window, camera, scenegraph);
+    viewer->assignRecordAndSubmitTaskAndPresentation({commandGraph});
 }
