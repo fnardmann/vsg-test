@@ -1,5 +1,5 @@
 ## Hello World project for VulkanSceneGraph
-  
+The `teapot.vsgt` file comes in the original from the [vsgExamples](https://github.com/vsg-dev/vsgExamples/tree/master/data/models) project.
   
 ### Installation (Linux)
 ```
