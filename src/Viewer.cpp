@@ -7,12 +7,7 @@ Viewer::Viewer(vsg::ref_ptr<vsg::Node> scenegraph)
     auto camera = create_camera(scenegraph, window);
     viewer->addWindow(window);
 
-    // add close handler to respond the close window button and pressing escape
-    viewer->addEventHandler(vsg::CloseHandler::create(viewer));
-
-    // add trackball to control the Camera
-    vsg::ref_ptr<vsg::EllipsoidModel> ellipsoidModel(scenegraph->getObject<vsg::EllipsoidModel>("EllipsoidModel"));
-    viewer->addEventHandler(vsg::Trackball::create(camera, ellipsoidModel));
+    add_event_handlers(scenegraph, camera);
 
     // add the CommandGraph to render the scene
     auto commandGraph = vsg::createCommandGraphForView(window, camera, scenegraph);
@@ -60,4 +55,14 @@ vsg::ref_ptr<vsg::Camera> Viewer::create_camera(
     }
 
     return vsg::Camera::create(perspective, lookAt, vsg::ViewportState::create(window->extent2D()));
+}
+
+void Viewer::add_event_handlers(vsg::ref_ptr<vsg::Node> scenegraph, vsg::ref_ptr<vsg::Camera> camera)
+{
+    // add close handler to respond the close window button and pressing escape
+    viewer->addEventHandler(vsg::CloseHandler::create(viewer));
+
+    // add trackball to control the Camera
+    vsg::ref_ptr<vsg::EllipsoidModel> ellipsoidModel(scenegraph->getObject<vsg::EllipsoidModel>("EllipsoidModel"));
+    viewer->addEventHandler(vsg::Trackball::create(camera, ellipsoidModel));
 }
