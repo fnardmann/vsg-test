@@ -2,22 +2,19 @@
 
 #include <iostream>
 
-int main(int argc, char** argv)
+int main()
 {
-    // set up defaults and read command line arguments to override them
-    vsg::CommandLine arguments(&argc, argv);
-
     std::string filename = "../teapot.vsgt";
 
-    auto options = vsg::Options::create();
-
     // load the scene graph
-    vsg::ref_ptr<vsg::Node> vsg_scene = vsg::read_cast<vsg::Node>(filename, options);
+    vsg::ref_ptr<vsg::Node> vsg_scene = vsg::read_cast<vsg::Node>(filename, vsg::Options::create());
     if (!vsg_scene)
     {
         std::cout << "Could not load vsg scene" << std::endl;
         return 0;
     }
+
+    auto zz = vsg_scene.get();
 
     // create the viewer and assign window(s) to it
     auto windowTraits = vsg::WindowTraits::create();
